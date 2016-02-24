@@ -15,6 +15,21 @@ class Node(object):
         self.train_data = None
         self.train_label = None
 
+    def deep_copy(self):
+        node = Node()
+        node.ix = self.ix
+        node.values = self.values[:]
+        node.child_nodes = {}
+        if not self.child_nodes:
+            for k, v in self.child_nodes.iteritems():
+                node.child_nodes[k] = v.deep_copy()
+        node.is_leaf = self.is_leaf
+        node.label = self.label
+        node.train_data = self.train_data[:]
+        node.train_label = self.train_label[:]
+
+        return node
+
     def is_leaf(self):
         return self.is_leaf
 
@@ -58,4 +73,3 @@ class Node(object):
 
     def add_node(self, ix, node):
         self.child_nodes[ix] = node
-

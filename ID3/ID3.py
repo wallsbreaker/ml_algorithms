@@ -5,6 +5,7 @@ from collections import Counter
 import math
 
 from DataStruct import DecisionTree
+from DataStruct import Node
 
 class ID3(object):
     def __init__(self, sentry):
@@ -25,7 +26,7 @@ class ID3(object):
         feature_num = len(self.train_data[0])
         values = [set([x[i] for x in self.train_data]) for i in range(feature_num)]
 
-        tree = DecisionTree.DecisionTree(values)
+        tree = DecisionTree.DecisionTree()
         node = self.construct_node(self.train_data, self.train_data_label, range(feature_num), values)
         tree.set_root(node)
 
@@ -34,17 +35,15 @@ class ID3(object):
     def construct_node(self, train_data, train_data_label, remain_features, values):
         #如果实例都属于同一类，则叶子节点
         if len(set(train_data_label)) == 1:
-            node = DecisionTree.Node()
+            node = Node.Node()
             node.set_leaf()
-            node.set_label(train_data_label[0])
             return node
         #如果所有属性都用过了
         if len(set(remain_features)) == 1 and remain_features[0] == -1:
             counter = Counter(train_data_label)
             label, num = counter.most_common(1)
-            node = DecisionTree.Node()
+            node = Node.Node()
             node.set_leaf()
-            node.set_label(label)
             return node
 
         #该节点选择的特征
@@ -53,9 +52,8 @@ class ID3(object):
         if information_gain < self.sentry:
             counter = Counter(train_data_label)
             label, num = counter.most_common(1)
-            node = DecisionTree.Node()
+            node = Node.Node()
             node.set_leaf()
-            node.set_label(label)
             return node
         remain_features[best_feautre_ix] = -1#将其置为已用过的特征
 
@@ -69,7 +67,7 @@ class ID3(object):
             child_node = self.construct_node(data, label, remain_features, values)
             child_nodes[ix] = child_node
 
-        node = DecisionTree.Node(best_feautre_ix, values[best_feautre_ix], child_nodes)
+        node = Node.Node(best_feautre_ix, values[best_feautre_ix], child_nodes)
         return node
 
     #根据一个特征进行划分

@@ -2,10 +2,12 @@
 __author__ = 'tao'
 
 class DecisionTree(object):
-    def __init__(self, values):
-        self.values = values
+    def __init__(self, root=None):
+        self.root = root
 
-        self.root = None
+    def deep_copy(self):
+        dt = DecisionTree(self.root.deep_copy())
+        return dt
 
     def set_root(self, node):
         self.root = node

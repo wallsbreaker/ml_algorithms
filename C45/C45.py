@@ -36,7 +36,7 @@ class C45(object):
         feature_num = len(self.train_data[0])
         values = [set([x[i] for x in self.train_data]) for i in range(feature_num)]
 
-        tree = DecisionTree.DecisionTree(values)
+        tree = DecisionTree.DecisionTree()
         node = self.construct_node(self.train_data, self.train_data_label, range(feature_num), values)
         tree.set_root(node)
 
@@ -73,14 +73,14 @@ class C45(object):
     def construct_node(self, train_data, train_data_label, remain_features, values):
         #如果实例都属于同一类，则叶子节点
         if len(set(train_data_label)) == 1:
-            node = Node()
+            node = Node.Node()
             node.set_leaf()
             node.set_train_data(train_data)
             node.set_train_label(train_data_label)
             return node
         #如果所有属性都用过了
         if len(set(remain_features)) == 1 and remain_features[0] == -1:
-            node = Node()
+            node = Node.Node()
             node.set_leaf()
             node.set_train_data(train_data)
             node.set_train_label(train_data_label)
@@ -91,7 +91,7 @@ class C45(object):
         #如果信息增益值小于阈值
         if information_gain_ratio < self.sentry:
 
-            node = Node()
+            node = Node.Node()
             node.set_leaf()
             node.set_train_data(train_data)
             node.set_train_label(train_data_label)
@@ -108,7 +108,7 @@ class C45(object):
             child_node = self.construct_node(data, label, remain_features, values)
             child_nodes[ix] = child_node
 
-        node = DecisionTree.Node(best_feautre_ix, values[best_feautre_ix], child_nodes)
+        node = Node.Node(best_feautre_ix, values[best_feautre_ix], child_nodes)
         node.set_train_data(train_data)
         node.set_train_label(train_data_label)
         return node
@@ -181,4 +181,4 @@ class C45(object):
                 best_feature_ix = feature_ix
                 max_information_gain_ratio = information_gain_ratio
 
-        return best_feature_ix, information_gain_ratio
+        return best_feature_ix, max_information_gain_ratio
